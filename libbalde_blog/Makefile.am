@@ -1,6 +1,7 @@
 lib_LTLIBRARIES = libbalde_blog.la
 
-libbalde_blog_la_SOURCES =
+libbalde_blog_la_SOURCES = \
+	post-parser.c
 
 libbalde_blog_la_CFLAGS = \
 	$(AM_CFLAGS) \

@@ -54,6 +54,7 @@ PKG_CHECK_MODULES([BALDE_MARKDOWN], [balde-markdown])
 AC_CONFIG_FILES([
     Makefile
     include/Makefile
+    include/balde-blog/Makefile
     libbalde_blog/Makefile
     tests/Makefile
 ])
