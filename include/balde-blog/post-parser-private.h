@@ -9,5 +9,8 @@
 #ifndef _BALDE_BLOG_POST_PARSER_PRIVATE_H
 #define _BALDE_BLOG_POST_PARSER_PRIVATE_H
 
+#include <glib.h>
+
+GHashTable* bb_post_parser_parse_dates(const gchar *post);
 
 #endif /* _BALDE_BLOG_POST_PARSER_PRIVATE_H */

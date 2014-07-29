@@ -1,7 +1,11 @@
-check_PROGRAMS =
+check_PROGRAMS = \
+	check_post_parser
 
 TESTS = \
 	$(check_PROGRAMS)
+
+check_post_parser_SOURCES = \
+	check_post_parser.c
 
 AM_CFLAGS = \
 	$(all_includes) \

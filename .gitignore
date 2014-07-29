@@ -41,3 +41,4 @@ Makefile.in
 /m4/*.m4
 
 # tests
+/tests/check_post_parser
