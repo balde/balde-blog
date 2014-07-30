@@ -131,10 +131,9 @@ bb_post_parser_parse_post(balde_app_t *app, const gchar *post)
     GHashTable *metadata = bb_post_parser_parse_metadata(post);
     if (metadata == NULL)  // probably a bad post file
         return NULL;
-    if (g_hash_table_size(metadata) == 0) {  // same as above
-        g_hash_table_destroy(metadata);
-        return NULL;
-    }
+    bb_post_t *p = NULL;
+    if (g_hash_table_size(metadata) == 0)  // same as above
+        goto err;
     bb_post_metadata_t *m = g_new(bb_post_metadata_t, 1);
     m->title = g_strdup(g_hash_table_lookup(metadata, "title"));
     m->author = g_strdup(g_hash_table_lookup(metadata, "author"));
@@ -143,9 +142,11 @@ bb_post_parser_parse_post(balde_app_t *app, const gchar *post)
         "datetime"));
     m->mdatetime = bb_post_parser_parse_datetime(g_hash_table_lookup(metadata,
         "mdatetime"));
-    bb_post_t *p = g_new(bb_post_t, 1);
+    p = g_new(bb_post_t, 1);
     p->raw_content = g_strdup(post);
     p->parsed_content = balde_markdown_parse(app, p->raw_content);
     p->metadata = m;
+err:
+    g_hash_table_destroy(metadata);
     return p;
 }
