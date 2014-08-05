@@ -57,6 +57,7 @@ AC_CONFIG_FILES([
     include/balde-blog/Makefile
     libbalde_blog/Makefile
     tests/Makefile
+    tests/foo/Makefile
 ])
 AC_OUTPUT
 

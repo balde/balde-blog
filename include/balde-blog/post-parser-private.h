@@ -10,7 +10,6 @@
 #define _BALDE_BLOG_POST_PARSER_PRIVATE_H
 
 #include <glib.h>
-#include <balde.h>
 
 typedef struct {
     gchar *title;
@@ -22,7 +21,6 @@ typedef struct {
 
 typedef struct {
     gchar *raw_content;
-    gchar *parsed_content;
     bb_post_metadata_t *metadata;
 } bb_post_t;
 
@@ -31,6 +29,6 @@ void bb_free_post(bb_post_t *p);
 GHashTable* bb_post_parser_parse_metadata(const gchar *post);
 GDateTime* bb_post_parser_parse_datetime(const gchar *dt);
 gchar** bb_post_parser_parse_tags(const gchar *tags_str);
-bb_post_t* bb_post_parser_parse_post(balde_app_t *app, const gchar *post);
+bb_post_t* bb_post_parser_parse_post(const gchar *post);
 
 #endif /* _BALDE_BLOG_POST_PARSER_PRIVATE_H */

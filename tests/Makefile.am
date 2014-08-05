@@ -1,8 +1,14 @@
+SUBDIRS = foo
+
 check_PROGRAMS = \
+	check_post_loader \
 	check_post_parser
 
 TESTS = \
 	$(check_PROGRAMS)
+
+check_post_loader_SOURCES = \
+	check_post_loader.c
 
 check_post_parser_SOURCES = \
 	check_post_parser.c

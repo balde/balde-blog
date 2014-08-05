@@ -35,8 +35,9 @@ bb_free_post_metadata(bb_post_metadata_t *m)
 void
 bb_free_post(bb_post_t *p)
 {
+    if (p == NULL)
+        return;
     g_free(p->raw_content);
-    g_free(p->parsed_content);
     bb_free_post_metadata(p->metadata);
     g_free(p);
 }
@@ -126,7 +127,7 @@ bb_post_parser_parse_tags(const gchar *tags_str)
 
 
 bb_post_t*
-bb_post_parser_parse_post(balde_app_t *app, const gchar *post)
+bb_post_parser_parse_post(const gchar *post)
 {
     GHashTable *metadata = bb_post_parser_parse_metadata(post);
     if (metadata == NULL)  // probably a bad post file
@@ -140,11 +141,12 @@ bb_post_parser_parse_post(balde_app_t *app, const gchar *post)
     m->tags = bb_post_parser_parse_tags(g_hash_table_lookup(metadata, "tags"));
     m->datetime = bb_post_parser_parse_datetime(g_hash_table_lookup(metadata,
         "datetime"));
+    if (m->datetime == NULL)  // we MUST have a creation datetime
+        m->datetime = g_date_time_new_now_utc();
     m->mdatetime = bb_post_parser_parse_datetime(g_hash_table_lookup(metadata,
         "mdatetime"));
     p = g_new(bb_post_t, 1);
     p->raw_content = g_strdup(post);
-    p->parsed_content = balde_markdown_parse(app, p->raw_content);
     p->metadata = m;
 err:
     g_hash_table_destroy(metadata);

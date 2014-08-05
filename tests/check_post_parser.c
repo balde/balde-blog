@@ -78,7 +78,7 @@ void
 test_parse_post(void)
 {
     balde_app_t *app = balde_app_init();
-    bb_post_t *p = bb_post_parser_parse_post(app,
+    bb_post_t *p = bb_post_parser_parse_post(
         "<!-- title: Moises e o Guda -->\n"
         "<!-- author: moises -->\n"
         "<!-- datetime: 2014-10-20 20:40:50 -->\n"
@@ -121,25 +121,6 @@ test_parse_post(void)
         "some random content here\n"
         "\n"
         "more random content here\n");
-    g_assert_cmpstr(p->parsed_content, ==,
-        "<!-- title: Moises e o Guda -->\n"
-        "\n"
-        "\n"
-        "<!-- author: moises -->\n"
-        "\n"
-        "\n"
-        "<!-- datetime: 2014-10-20 20:40:50 -->\n"
-        "\n"
-        "\n"
-        "<!-- mdatetime: 2014-10-20 22:40:45 -->\n"
-        "\n"
-        "\n"
-        "<!-- tags: bola, guda, arcoiro -->\n"
-        "\n"
-        "\n"
-        "<p>some random content here</p>\n"
-        "\n"
-        "<p>more random content here</p>");
     bb_free_post(p);
     balde_app_free(app);
 }
