@@ -122,3 +122,35 @@ clean:
     g_dir_close(dir);
     return rv;
 }
+
+
+void
+bb_post_loader_load_app(balde_app_t *app)
+{
+    const gchar *dirpath = balde_app_get_config(app, "POSTS_DIRECTORY");
+    if (dirpath == NULL) {
+        balde_abort_set_error_with_description(app, 500,
+            "POSTS_DIRECTORY must be set");
+        return;
+    }
+
+    /*
+     * TODO: when we start reloading the cached posts automatically, we need to
+     * free the 'posts' list before re-running bp_post_loader_load_from_directory,
+     * and need to make sure that 'user_data' is set to NULL right after creating
+     * the balde application context.
+     */
+    app->user_data = g_new(bb_user_data_t, 1);
+    bb_user_data_t *ud = app->user_data;
+    ud->posts = bb_post_loader_load_from_directory(dirpath);
+}
+
+
+void
+bb_post_loader_free_app(balde_app_t *app)
+{
+    bb_user_data_t *ud = app->user_data;
+    bb_free_items(ud->posts);
+    // TODO: free other bb_user_data_t elements when used.
+    g_free(ud);
+}

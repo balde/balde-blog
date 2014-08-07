@@ -105,14 +105,14 @@ test_load_from_directory(void)
     g_assert_cmpstr(t->slug, ==, "baz");
     g_assert(t->post != NULL);
     g_assert_cmpstr(t->post->raw_content, ==,
-        "<!-- title: foo asd -->\n"
+        "<!-- title: foo asd baz -->\n"
         "<!-- author: arcoiro -->\n"
         "<!-- datetime: 2014-08-09 10:00:00 -->\n"
         "<!-- tags: bola, guda -->\n"
         "\n"
         "This is just another test post!\n");
     g_assert(t->post->metadata != NULL);
-    g_assert_cmpstr(t->post->metadata->title, ==, "foo asd");
+    g_assert_cmpstr(t->post->metadata->title, ==, "foo asd baz");
     g_assert_cmpstr(t->post->metadata->author, ==, "arcoiro");
     dt = g_date_time_new_utc(2014, 8, 9, 10, 0, 0);
     g_assert_cmpint(g_date_time_compare(t->post->metadata->datetime, dt), ==, 0);
@@ -128,6 +128,47 @@ test_load_from_directory(void)
 }
 
 
+void
+test_load_app(void)
+{
+    balde_app_t *app = balde_app_init();
+    balde_app_set_config(app, "POSTS_DIRECTORY", "foo");
+    bb_post_loader_load_app(app);
+    bb_user_data_t *ud = app->user_data;
+    GList *l = ud->posts;
+    g_assert(l != NULL);
+    bb_item_t *t;
+    GDateTime *dt;
+
+    t = l->data;
+    g_assert(t != NULL);
+    g_assert(t->error == NULL);
+    g_assert_cmpstr(t->slug, ==, "lol");
+    g_assert(t->post != NULL);
+    g_assert_cmpstr(t->post->raw_content, ==,
+        "<!-- title: foo asd -->\n"
+        "<!-- author: arcoiro -->\n"
+        "<!-- datetime: 2015-08-10 10:00:00 -->\n"
+        "<!-- tags: bola, guda -->\n"
+        "\n"
+        "This is yet another test post!\n");
+    g_assert(t->post->metadata != NULL);
+    g_assert_cmpstr(t->post->metadata->title, ==, "foo asd");
+    g_assert_cmpstr(t->post->metadata->author, ==, "arcoiro");
+    dt = g_date_time_new_utc(2015, 8, 10, 10, 0, 0);
+    g_assert_cmpint(g_date_time_compare(t->post->metadata->datetime, dt), ==, 0);
+    g_date_time_unref(dt);
+    g_assert(t->post->metadata->mdatetime == NULL);
+    g_assert_cmpstr(t->post->metadata->tags[0], ==, "bola");
+    g_assert_cmpstr(t->post->metadata->tags[1], ==, "guda");
+    g_assert(t->post->metadata->tags[2] == NULL);
+
+    bb_post_loader_free_app(app);
+    balde_app_free(app);
+}
+
+
+
 int
 main(int argc, char** argv)
 {
@@ -135,5 +176,6 @@ main(int argc, char** argv)
     g_test_add_func("/post_loader/parse_slug", test_parse_slug);
     g_test_add_func("/post_loader/load_from_file", test_load_from_file);
     g_test_add_func("/post_loader/load_from_directory", test_load_from_directory);
+    g_test_add_func("/post_loader/load_app", test_load_app);
     return g_test_run();
 }

@@ -1,6 +1,7 @@
 lib_LTLIBRARIES = libbalde_blog.la
 
 libbalde_blog_la_SOURCES = \
+	helpers.c \
 	post-loader.c \
 	post-parser.c
 
